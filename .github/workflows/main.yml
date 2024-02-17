@@ -1,0 +1,17 @@
+name: Test project with Gradle
+
+on:
+  push:
+
+jobs:
+  build-gradle-project:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout project sources
+      uses: actions/checkout@v3
+    - name: Setup Gradle
+      uses: gradle/gradle-build-action@v2
+    - name: Make gradlew executable
+      run: chmod +x ./gradlew
+    - name: Run tests with Gradle Wrapper
+      run: ./gradlew test
