@@ -4,18 +4,46 @@
 package at.ac.fhcampuswien
 
 import kotlin.random.Random
+import kotlin.system.exitProcess
 
 class App {
     // Game logic for a number guessing game
     fun playNumberGame(digitsToGuess: Int = 4) {
         //TODO: build a menu which calls the functions and works with the return values
-        var number = generateRandomNonRepeatingNumber(digitsToGuess)
-        var printed = checkUserInputAgainstGeneratedNumber(readlnOrNull()!!.toInt(),number)
-        while (printed.toString() != "Output: 4:4") {
-            printed = checkUserInputAgainstGeneratedNumber(readlnOrNull()!!.toInt(),number)
-            println(printed)
+        println("LET THE GAMES BEGIN")
+        println("You have unlimited guesses, so take your time and use your brain...")
+        println("Enter your first guess, you will receive feedback in a form of -> 2:1 for example" +
+                "which stands for 2 right digits (not knowing if they are on the right position) and 1 " +
+                "right digit which is also on the right position!")
+        try {
+            // throw IllegalArgumentException when too many or too less digits given
+            if (digitsToGuess<1 || digitsToGuess>9) {
+                throw IllegalArgumentException("Too many or too less digits")
+            }
+            // create random number using generateRandomNonRepeatingNumber method
+            val number = generateRandomNonRepeatingNumber(digitsToGuess)
+            var printed = 0
+
+            // testing: println(number)
+
+            // playing the game until generated number is the same as the input
+            while (printed.toString() != number.toString()) {
+                // read in input -> readLine or Null -> "!!" means value will never be null
+                printed = readlnOrNull()!!.toInt()
+                // catching when guessed number and generated number do not have the same length
+                if (printed.toString().length != number.toString().length) {
+                    println("Input does not have the same length as the given random number: please try " +
+                            "again with a number with the length: " + number.toString().length)
+                    continue
+                }
+                println(checkUserInputAgainstGeneratedNumber(printed,number))
+            }
+            println("You Won")
+
+        } catch (e: Exception) {
+            println("Something went wrong... Try again")
+            exitProcess(0)
         }
-        println("You Won")
     }
 
     /**
@@ -33,12 +61,18 @@ class App {
      * @throws IllegalArgumentException if the length is more than 9 or less than 1.
      */
     val generateRandomNonRepeatingNumber: (Int) -> Int = { length ->
+        // set random
         val random = Random(System.currentTimeMillis())
+        // create lists, one with digits from 0-9 and an empty one (where we add the values to)
         val digits = (0..9).toMutableList()
         val result = mutableListOf<Int>()
+        // iteration from 1 to the given length of the number
         for (i in 1..length) {
+            // generate random from 0 to the size of digits
             val index = random.nextInt(0,digits.size)
-            result.add(digits.removeAt(index))
+            // add the value on this index to the result and remove it from the digits list -> so there are no duplicates
+            result.add(digits[index])
+            digits.removeAt(index)
         }
         result.joinToString("").toInt()
     }
@@ -61,29 +95,55 @@ class App {
      */
     val checkUserInputAgainstGeneratedNumber: (Int, Int) -> CompareResult = { input, generatedNumber ->
         //TODO implement the function
+
+        // counting variables
         var rightDigits = 0
         var completedDigits = 0
+        // list containing characters which appear more often -> so the rightDigits count is correct
+        val alreadyAdded = mutableListOf<Char>()
 
-        val inputString = input.toString()
+        var inputString = input.toString()
         val generatedNumberString = generatedNumber.toString()
-
-        for (i in generatedNumberString.indices) {
-            if (inputString[i] == generatedNumberString[i]) {
-                completedDigits++
-            } else if (inputString[i] in generatedNumberString) {
-                rightDigits++
+        /* testing
+        println(inputString)
+        println(generatedNumberString)
+        */
+        try {
+            // catching if the length of input and generated number is not the same
+            if (inputString.length != generatedNumberString.length) {
+                throw IllegalArgumentException("Input and generated Number not same length!")
             }
+            // increasing completedDigits and rightDigits in case of guessing the correct number + position
+            // iterating through each character (=indices) of the generatedNumberString
+            for (i in generatedNumberString.indices) {
+                if (inputString[i] == generatedNumberString[i]) {
+                    completedDigits++
+                    // println(alreadyAdded)
+                    if (inputString[i] !in alreadyAdded) {
+                        rightDigits++
+                    }
+                    alreadyAdded.add(inputString[i])
+                } else if (inputString[i] in generatedNumberString) {
+                    if (inputString[i] !in alreadyAdded) {
+                        rightDigits++
+                    }
+                    alreadyAdded.add(inputString[i])
+                }
+            }
+        // catching exception
+        } catch (e: Exception) {
+            throw IllegalArgumentException("Input and generated Number do not have the same length!")
         }
-
-
-        CompareResult(rightDigits, completedDigits)   // return value is a placeholder
+        CompareResult(rightDigits, completedDigits)
     }
 }
 
 fun main() {
-    println("Hello World!")
     // TODO: call the App.playNumberGame function with and without default arguments
+
+    println("How many generated digits? Please enter a number from 1 to 9")
+    val digits = readlnOrNull()!!.toInt()
     val app = App()
-    app.playNumberGame(4)
+    app.playNumberGame(digits)
 
 }
