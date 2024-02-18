@@ -9,17 +9,36 @@
 ## Questions
 ### Describe how Kotlin handles null safety. What are nullable types and non-null types in Kotlin? (0,5 points)
 
-<span style="color:blue">Provide your answer here! </span>
-> Note: you can also use code snippets to illustrate your answer. 
+<span style="color:blue"> Kotlin uses different operators to handle null safety. One possible operator is "?." which are the "safe calls", which allow accessing an nullable object safely and it will return
+"null" after begin called instead of throwing a null pointer exception. Another possible operator is the "Elvis operator" which is "?:", which makes it possible to add a default value in case of a nullable expression being null. Also using the safe
+cast operator is an opportunity which looks like "as?", which allows casting a variable to a nullable type, returning null if the cast is impossible. The operator "!!" can be used to declare that an specific expression will never
+be null and tells the compiler to throw a null pointer exception in case it is null. "\n"
+Nullable Types are marked by an "?" which indicate that the variable can either hold a reference to an object or a null value. Examples below -> </span>
 
-```kotlin 
-// example code snippet
-val a: String = "value" // non-null type
-```
+````kotlin
+// non null type
+var nonNullType: String = "Hello"
+// null type
+var nullType1: String? = null
+// example for safe calls -> we have a Person class with an attribute: val name: String? (safe call = "?." operator)
+val personName = person?.name
+// elvis operator
+val nullType2: String? = null
+val elvisExample = nullType2 ?: "Default"
+````
 
 ### What are lambda expressions and higher order functions in Kotlin? Why would you store a function inside a variable? (0,5 points)
 
-<span style="color:blue">Provide your answer here!</span>
+<span style="color:blue">Lamda expressions in Kotlin are used to create functions without declaring a name for them. They are mostly used when you need to pass a function to another function as a parameter
+ or when you want to simplify a function declaration. It is declared with "{}" and "->" to separate parameters from the function.
+Higher order functions are functions that accept/take other functions as a parameter and/or return functions. Examples below -></span>
+
+````kotlin
+// lambda expression (simple)
+val addition: (Int, Int) -> Int = {x,y -> x+y}
+// higher order function
+fun calculation(x: Int, y: Int, operation: (Int,Int) -> Int): Int { return operation(x,y) }
+````
 
 ### Provide a solution for the following number guessing game inside `App.kt`. (3 points)
 

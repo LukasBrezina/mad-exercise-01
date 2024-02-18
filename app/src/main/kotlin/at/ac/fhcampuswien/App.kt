@@ -3,10 +3,19 @@
  */
 package at.ac.fhcampuswien
 
+import kotlin.random.Random
+
 class App {
     // Game logic for a number guessing game
     fun playNumberGame(digitsToGuess: Int = 4) {
         //TODO: build a menu which calls the functions and works with the return values
+        var number = generateRandomNonRepeatingNumber(digitsToGuess)
+        var printed = checkUserInputAgainstGeneratedNumber(readlnOrNull()!!.toInt(),number)
+        while (printed.toString() != "Output: 4:4") {
+            printed = checkUserInputAgainstGeneratedNumber(readlnOrNull()!!.toInt(),number)
+            println(printed)
+        }
+        println("You Won")
     }
 
     /**
@@ -24,8 +33,14 @@ class App {
      * @throws IllegalArgumentException if the length is more than 9 or less than 1.
      */
     val generateRandomNonRepeatingNumber: (Int) -> Int = { length ->
-        //TODO implement the function
-        0   // return value is a placeholder
+        val random = Random(System.currentTimeMillis())
+        val digits = (0..9).toMutableList()
+        val result = mutableListOf<Int>()
+        for (i in 1..length) {
+            val index = random.nextInt(0,digits.size)
+            result.add(digits.removeAt(index))
+        }
+        result.joinToString("").toInt()
     }
 
     /**
@@ -46,11 +61,29 @@ class App {
      */
     val checkUserInputAgainstGeneratedNumber: (Int, Int) -> CompareResult = { input, generatedNumber ->
         //TODO implement the function
-        CompareResult(0, 0)   // return value is a placeholder
+        var rightDigits = 0
+        var completedDigits = 0
+
+        val inputString = input.toString()
+        val generatedNumberString = generatedNumber.toString()
+
+        for (i in generatedNumberString.indices) {
+            if (inputString[i] == generatedNumberString[i]) {
+                completedDigits++
+            } else if (inputString[i] in generatedNumberString) {
+                rightDigits++
+            }
+        }
+
+
+        CompareResult(rightDigits, completedDigits)   // return value is a placeholder
     }
 }
 
 fun main() {
     println("Hello World!")
     // TODO: call the App.playNumberGame function with and without default arguments
+    val app = App()
+    app.playNumberGame(4)
+
 }
