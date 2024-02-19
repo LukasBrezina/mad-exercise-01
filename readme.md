@@ -12,7 +12,8 @@
 <span style="color:blue"> Kotlin uses different operators to handle null safety. One possible operator is "?." which are the "safe calls", which allow accessing an nullable object safely and it will return
 "null" after begin called instead of throwing a null pointer exception. Another possible operator is the "Elvis operator" which is "?:", which makes it possible to add a default value in case of a nullable expression being null. Also using the safe
 cast operator is an opportunity which looks like "as?", which allows casting a variable to a nullable type, returning null if the cast is impossible. The operator "!!" can be used to declare that an specific expression will never
-be null and tells the compiler to throw a null pointer exception in case it is null. "\n"
+be null and tells the compiler to throw a null pointer exception in case it is null.
+
 Nullable Types are marked by an "?" which indicate that the variable can either hold a reference to an object or a null value. Examples below -> </span>
 
 ````kotlin
