@@ -16,7 +16,7 @@ class App {
 
         try {
             // throw IllegalArgumentException when too many or too less digits given
-            if (digitsToGuess<1 || digitsToGuess>9) {
+            if (digitsToGuess < 1 || digitsToGuess > 9) {
                 throw IllegalArgumentException("Too many or too less digits")
             }
 
@@ -33,7 +33,7 @@ class App {
                             "again with a number with the length: " + number.toString().length)
                     continue
                 }
-                println(checkUserInputAgainstGeneratedNumber(printed,number))
+                println(checkUserInputAgainstGeneratedNumber(printed, number))
             }
             println("You Won")
 
@@ -61,7 +61,7 @@ class App {
 
         if (length >= 1 && length <= 9) {
             while (result.size < length) {
-                val random = (0..9).random().toString()
+                val random = (1..9).random().toString()
                 if (!(random in result)) {
                     result.add(random)
                 }
